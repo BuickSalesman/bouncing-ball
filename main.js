@@ -21,16 +21,16 @@ const createWindow = () => {
       contextIsolation: false,
     },
   });
-  win.setIgnoreMouseEvents(false);
+  win.setIgnoreMouseEvents(true, { forward: true });
   win.loadFile("index.html");
 };
 
-ipcMain.on("set-ignore-mouse", (e, shouldIgnore) => {
-  if (shouldIgnore) {
-    win.setIgnoreMouseEvents(true, { forward: true });
-  } else {
-    win.setIgnoreMouseEvents(false);
-  }
+ipcMain.on("body-under", (e) => {
+  win.setIgnoreMouseEvents(false);
+});
+
+ipcMain.on("no-bodies-found", (e) => {
+  win.setIgnoreMouseEvents(true, { forward: true });
 });
 
 app.whenReady().then(() => {

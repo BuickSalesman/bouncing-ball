@@ -82,25 +82,21 @@
       const runner = Runner.create();
       Runner.run(runner, engine);
 
-      render.canvas.addEventListener("mousedown", (event) => {
+      render.canvas.addEventListener("mousemove", (event) => {
         const rect = render.canvas.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+        const mouseX = event.screenX - rect.left;
+        const mouseY = event.screenY - rect.top;
 
         const allBodies = Composite.allBodies(engine.world);
         const bodiesUnderMouse = Query.point(allBodies, { x: mouseX, y: mouseY });
 
         if (bodiesUnderMouse.length > 0) {
-          ipcRenderer.send("set-ignore-mouse", false);
+          ipcRenderer.send("body-under");
         }
-      });
 
-      // render.canvas.addEventListener("mousedown", () => {
-      //   ipcRenderer.send("set-ignore-mouse", true);
-      // });
-
-      render.canvas.addEventListener("mouseup", () => {
-        ipcRenderer.send("set-ignore-mouse", true);
+        if (bodiesUnderMouse.length === 0) {
+          ipcRenderer.send("no-bodies-found");
+        }
       });
     </script>
   </body>
