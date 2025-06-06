@@ -42,7 +42,6 @@ const createWindow = () => {
       transparent: true,
       alwaysOnTop: true,
       skipTaskbar: true,
-      focusable: false,
       hasShadow: false,
       enableLargerThanScreen: true,
       webPreferences: {

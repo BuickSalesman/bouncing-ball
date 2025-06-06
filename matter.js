@@ -30,7 +30,8 @@ const mouseConstraint = MouseConstraint.create(engine, {
   },
 });
 
-const ball = Bodies.circle(400, 400, 30, {
+const ball = Bodies.circle(800, 800, 30, {
+  isStatic: true,
   render: {
     fillStyle: "blue",
     strokeStyle: "blue",
@@ -38,7 +39,7 @@ const ball = Bodies.circle(400, 400, 30, {
   },
 });
 
-const ball2 = Bodies.circle(480, 480, 30, {
+const ball2 = Bodies.circle(880, 800, 30, {
   render: {
     fillStyle: "red",
     strokeStyle: "red",
@@ -63,13 +64,10 @@ Render.run(render);
 const runner = Runner.create();
 Runner.run(runner, engine);
 
-render.canvas.addEventListener("mousemove", (event) => {
-  const rect = render.canvas.getBoundingClientRect();
-  const mouseX = event.screenX - rect.left;
-  const mouseY = event.screenY - rect.top;
-
+Events.on(mouseConstraint, "mousemove", (event) => {
+  const { x, y } = event.mouse.position;
   const allBodies = Composite.allBodies(engine.world);
-  const bodiesUnderMouse = Query.point(allBodies, { x: mouseX, y: mouseY });
+  const bodiesUnderMouse = Query.point(allBodies, { x, y });
 
   if (bodiesUnderMouse.length > 0) {
     ipcRenderer.send("body-under");
