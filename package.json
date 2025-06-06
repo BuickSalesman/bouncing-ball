@@ -1,0 +1,19 @@
+{
+  "name": "window-bouncing",
+  "version": "1.0.0",
+  "description": "a fun app that lets you bounce a ball on your screen ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "npm run test"
+  },
+  "author": "Adam O'Donnell",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/matter-js": "^0.19.8",
+    "electron": "^36.4.0"
+  },
+  "dependencies": {
+    "matter-js": "^0.20.0"
+  }
+}
