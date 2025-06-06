@@ -10,6 +10,7 @@
   "author": "Adam O'Donnell",
   "license": "ISC",
   "devDependencies": {
+    "@types/electron": "^1.4.38",
     "@types/matter-js": "^0.19.8",
     "electron": "^36.4.0"
   },
