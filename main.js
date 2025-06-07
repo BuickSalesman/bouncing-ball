@@ -14,25 +14,12 @@ let engine, ball;
 
 function setUpMatter() {
   engine = Engine.create();
-  let angle = -Math.PI / 2;
 
-  function rotateGravity() {
-    engine.world.gravity.x = Math.cos(angle);
-    engine.world.gravity.y = Math.sin(angle);
-
-    angle += Math.PI / 2;
-
-    setTimeout(rotateGravity, 1500);
-  }
-
-  // kick off the loop immediately
-  rotateGravity();
-
-  ball = Bodies.circle(400, 400, 30, {
+  ball = Bodies.circle(1200, -500, 30, {
     label: "ball",
   });
 
-  const platform = Bodies.rectangle(400, 600, 300, 20, {
+  const platform = Bodies.rectangle(400, 400, 3000000, 20, {
     isStatic: true,
     label: "platform",
   });
