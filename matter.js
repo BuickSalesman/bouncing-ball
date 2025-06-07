@@ -1,79 +1,76 @@
+// matter-view.js
 // @ts-check
 /// <reference types="matter-js" />
 
-const { Engine, Render, Runner, Bodies, Composite, Query, Events, Mouse, MouseConstraint } = require("matter-js");
 const { ipcRenderer } = require("electron");
+const { Engine, Render, Bodies, Composite, Body, Mouse, MouseConstraint, Events, Query } = require("matter-js");
 
-const width = window.innerWidth;
-const height = window.innerHeight;
+const localBodies = new Map();
 
+const params = new URLSearchParams(location.search);
+const offsetX = Number(params.get("offsetX")) || 0;
+const offsetY = Number(params.get("offsetY")) || 0;
+console.log("Renderer offset:", offsetX, offsetY);
+
+const canvas = document.querySelector("canvas");
 const engine = Engine.create();
-const container = document.getElementById("matter-container");
-
 const render = Render.create({
-  element: container,
-  engine: engine,
+  canvas,
+  engine,
   options: {
-    width: width,
-    height: height,
+    width: 1,
+    height: 1,
     wireframes: false,
     background: "transparent",
   },
 });
-
-const mouse = Mouse.create(render.canvas);
-
-const mouseConstraint = MouseConstraint.create(engine, {
-  mouse: mouse,
-  constraint: {
-    stiffness: 0.2,
-  },
-});
-
-const ball = Bodies.circle(800, 800, 30, {
-  isStatic: true,
-  render: {
-    fillStyle: "blue",
-    strokeStyle: "blue",
-    lineWidth: 2,
-  },
-});
-
-const ball2 = Bodies.circle(880, 800, 30, {
-  render: {
-    fillStyle: "red",
-    strokeStyle: "red",
-    lineWidth: 2,
-  },
-});
-
-const bottom = Bodies.rectangle(width / 2, height + 51, width, 100, {
-  isStatic: true,
-  render: {
-    fillStyle: "black",
-    strokeStyle: "black",
-    lineWidth: 2,
-  },
-});
-
-Composite.add(engine.world, [ball, ball2, bottom]);
-Composite.add(engine.world, mouseConstraint);
-
 Render.run(render);
+console.log("Renderer started");
 
-const runner = Runner.create();
-Runner.run(runner, engine);
+function resize() {
+  const width = window.innerWidth,
+    height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+  render.options.width = width;
+  render.options.height = height;
+}
+window.addEventListener("resize", resize);
+resize();
 
-Events.on(mouseConstraint, "mousemove", (event) => {
-  const { x, y } = event.mouse.position;
-  const allBodies = Composite.allBodies(engine.world);
-  const bodiesUnderMouse = Query.point(allBodies, { x, y });
+let localBall = null;
+ipcRenderer.on("world-state", (_evt, bodies) => {
+  bodies.forEach((b) => {
+    const x = b.x - offsetX;
+    const y = b.y - offsetY;
+    const inView = x >= 0 && y >= 0 && x <= window.innerWidth && y <= window.innerHeight;
 
-  if (bodiesUnderMouse.length > 0) {
-    ipcRenderer.send("body-under");
-  }
+    if (!inView) {
+      if (localBodies.has(b.id)) {
+        Composite.remove(engine.world, localBodies.get(b.id));
+        localBodies.delete(b.id);
+      }
+      return;
+    }
 
-  if (bodiesUnderMouse.length === 0) {
-    ipcRenderer.send("no-bodies-found");
-  }
+    let body = localBodies.get(b.id);
+    if (!body) {
+      if (b.label === "ball") {
+        body = Bodies.circle(x, y, b.width / 2, {
+          restitution: 0.8,
+          render: { fillStyle: "steelblue" },
+        });
+      } else if (b.label === "platform") {
+        body = Bodies.rectangle(x, y, b.width, b.height, {
+          isStatic: true,
+          render: { fillStyle: "darkgray" },
+        });
+      }
+      localBodies.set(b.id, body);
+      Composite.add(engine.world, body);
+    }
+
+    Body.setPosition(body, { x, y });
+    Body.setAngle(body, b.angle);
+  });
 });
