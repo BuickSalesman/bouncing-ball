@@ -34,7 +34,7 @@ function setUpMatter() {
 }
 
 const createWindows = () => {
-  windows.forEach((w) => w.close);
+  windows.forEach((w) => w.close());
   windows = [];
 
   screen.getAllDisplays().forEach((d, i) => {
@@ -81,6 +81,14 @@ function startBroadcast() {
     windows.forEach((w) => w.webContents.send("world-state", state));
   }, 16);
 }
+
+ipcMain.on("body-under", (_evt) => {
+  windows.forEach((win) => win.setIgnoreMouseEvents(false), console.log("body under"));
+});
+
+ipcMain.on("no-bodies-found", (_evt) => {
+  windows.forEach((win) => win.setIgnoreMouseEvents(true, { forward: true }));
+});
 
 app.whenReady().then(() => {
   setUpMatter();

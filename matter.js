@@ -27,6 +27,34 @@ const render = Render.create({
 Render.run(render);
 console.log("Renderer started");
 
+const mouse = Mouse.create(render.canvas);
+const mouseConstraint = MouseConstraint.create(engine, {
+  mouse,
+  constraint: {
+    stiffness: 0.2,
+  },
+});
+Composite.add(engine.world, mouseConstraint);
+
+let bodiesUnderMouse;
+
+render.canvas.addEventListener("mousemove", (event) => {
+  const rect = render.canvas.getBoundingClientRect();
+  const mouseX = event.screenX - rect.left;
+  const mouseY = event.screenY - rect.top;
+
+  const allBodies = Composite.allBodies(engine.world);
+  bodiesUnderMouse = Query.point(allBodies, { x: mouseX, y: mouseY });
+
+  if (bodiesUnderMouse.length > 0) {
+    ipcRenderer.send("body-under");
+  }
+
+  if (bodiesUnderMouse.length === 0) {
+    ipcRenderer.send("no-bodies-found");
+  }
+});
+
 function resize() {
   const width = window.innerWidth,
     height = window.innerHeight;
