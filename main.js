@@ -19,15 +19,11 @@ function setUpMatter() {
     label: "ball",
   });
 
-  const ball2 = Bodies.circle(300, 300, 20, {
-    label: "ball",
-  });
-
   const platform = Bodies.rectangle(400, 400, 3000000, 20, {
     isStatic: true,
     label: "platform",
   });
-  World.add(engine.world, [ball, ball2, platform]);
+  World.add(engine.world, [ball, platform]);
 
   const timestep = 1000 / 60;
   setInterval(() => {
