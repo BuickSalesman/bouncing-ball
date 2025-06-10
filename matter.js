@@ -3,7 +3,20 @@
 /// <reference types="matter-js" />
 
 const { ipcRenderer } = require("electron");
-const { Engine, Render, Bodies, Composite, Body, Mouse, MouseConstraint, Events, Query } = require("matter-js");
+const {
+  Vector,
+  Engine,
+  Render,
+  Bodies,
+  Composite,
+  Body,
+  Mouse,
+  MouseConstraint,
+  Events,
+  Query,
+  World,
+  Runner,
+} = require("matter-js");
 
 const localBodies = new Map();
 
@@ -27,26 +40,57 @@ const render = Render.create({
 Render.run(render);
 console.log("Renderer started");
 
-const mouse = Mouse.create(render.canvas);
-const mouseConstraint = MouseConstraint.create(engine, {
-  mouse,
-  constraint: {
-    stiffness: 0.2,
-  },
-});
+const runner = Runner.create();
+Runner.run(runner, engine);
+
+let mouse = Mouse.create(render.canvas),
+  mouseConstraint = MouseConstraint.create(engine, {
+    mouse: mouse,
+    constraint: {
+      stiffness: 0.8,
+      render: {
+        visible: true,
+      },
+    },
+  });
+const rect = render.canvas.getBoundingClientRect();
+// let mouseX = offsetX;
+// let mouseY = offsetY;
+
+// mouse.pixelRatio = 128;
+// let vector = Vector.create(mouseX, mouseY);
+// Mouse.setOffset(mouse, vector);
+console.log(mouse);
 Composite.add(engine.world, mouseConstraint);
 
+render.mouse = mouse;
+
 let bodiesUnderMouse;
+
+Events.on(mouseConstraint, "mousedown", () => {
+  ipcRenderer.send("clicked");
+});
 
 render.canvas.addEventListener("mousemove", (event) => {
   const rect = render.canvas.getBoundingClientRect();
   const mouseX = event.screenX - rect.left;
   const mouseY = event.screenY - rect.top;
-
   const allBodies = Composite.allBodies(engine.world);
   bodiesUnderMouse = Query.point(allBodies, { x: mouseX, y: mouseY });
 
   if (bodiesUnderMouse.length > 0) {
+    console.log(mouse);
+    console.log(
+      mouseX,
+      mouseY,
+      "mouse.absolute:",
+      mouse.absolute.x,
+      mouse.absolute.y,
+      "mouse.position:",
+      mouse.position.x,
+      mouse.position.y
+    );
+
     ipcRenderer.send("body-under");
   }
 
@@ -67,6 +111,7 @@ window.addEventListener("resize", resize);
 resize();
 
 let localBall = null;
+let nonLocalBall = Bodies.circle(200, 300, 30);
 ipcRenderer.on("world-state", (_evt, bodies) => {
   bodies.forEach((b) => {
     const x = b.x - offsetX;
@@ -95,7 +140,7 @@ ipcRenderer.on("world-state", (_evt, bodies) => {
         });
       }
       localBodies.set(b.id, body);
-      Composite.add(engine.world, body);
+      Composite.add(engine.world, [body, nonLocalBall]);
     }
 
     Body.setPosition(body, { x, y });

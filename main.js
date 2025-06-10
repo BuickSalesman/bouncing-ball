@@ -25,6 +25,7 @@ function setUpMatter() {
   });
   World.add(engine.world, [ball, platform]);
 
+  // this code runs the engine manually tick by tick and im worried it's hyper inefficient
   const timestep = 1000 / 60;
   setInterval(() => {
     Engine.update(engine, timestep);
@@ -50,6 +51,7 @@ const createWindows = () => {
       skipTaskbar: true,
       focusable: false,
       hasShadow: false,
+      //need to look at enable large than screen in docs
       enableLargerThanScreen: true,
       webPreferences: {
         nodeIntegration: true,
@@ -88,6 +90,10 @@ ipcMain.on("body-under", (_evt) => {
 
 ipcMain.on("no-bodies-found", (_evt) => {
   windows.forEach((win) => win.setIgnoreMouseEvents(true, { forward: true }));
+});
+
+ipcMain.on("clicked", () => {
+  console.log("clicked da mouse");
 });
 
 app.whenReady().then(() => {
