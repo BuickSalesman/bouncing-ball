@@ -2,7 +2,8 @@
 // @ts-check
 /// <reference types="matter-js" />
 
-const { Engine, Render, Runner, Mouse, MouseConstraint, World, Bodies } = require("matter-js");
+const { ipcRenderer } = require("electron");
+const { Engine, Render, Runner, Mouse, MouseConstraint, Composite, Bodies, Events, Query } = require("matter-js");
 
 const canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
@@ -33,7 +34,7 @@ let mouse = Mouse.create(render.canvas),
     },
   });
 
-World.add(engine.world, mouseConstraint);
+Composite.add(engine.world, mouseConstraint);
 
 const ball = Bodies.circle(200, 200, 20, {
   render: { fillStyle: "blue" },
@@ -44,6 +45,18 @@ const platform = Bodies.rectangle(canvas.width / 2, canvas.height, canvas.width 
   render: { fillStyle: "white" },
 });
 
-World.add(engine.world, [ball, platform]);
+Composite.add(engine.world, [ball, platform]);
 
-console.log("matter loaded!");
+let bodiesUnderMouse;
+Events.on(mouseConstraint, "mousemove", () => {
+  let { x, y } = mouse.position;
+  const bodiesUnderMouse = Query.point(Composite.allBodies(engine.world), { x, y });
+
+  if (bodiesUnderMouse.length > 0) {
+    ipcRenderer.send("body-under");
+  }
+
+  if (bodiesUnderMouse.length === 0) {
+    ipcRenderer.send("no-bodies-found");
+  }
+});

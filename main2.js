@@ -3,14 +3,13 @@
 /// <reference types="node" />
 /// <reference types="matter-js" />
 
-const { BrowserWindow, app, screen } = require("electron");
-const { Engine } = require("matter-js");
+const { BrowserWindow, app, screen, ipcMain } = require("electron");
 
-const engine = Engine.create();
+let win;
 
 const createWindow = () => {
   const { x, y, width, height } = screen.getPrimaryDisplay().bounds;
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     x,
     y,
     width,
@@ -30,6 +29,14 @@ const createWindow = () => {
   win.webContents.openDevTools({ mode: "detach" });
   win.setIgnoreMouseEvents(true, { forward: true });
 };
+
+ipcMain.on("body-under", (_evt) => {
+  win.setIgnoreMouseEvents(false), console.log("body under");
+});
+
+ipcMain.on("no-bodies-found", (_evt) => {
+  win.setIgnoreMouseEvents(true, { forward: true });
+});
 
 app.whenReady().then(() => {
   createWindow();
