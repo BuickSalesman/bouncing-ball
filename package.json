@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "dev": "electron main2.js",
     "test": "npm run test"
   },
   "author": "Adam O'Donnell",

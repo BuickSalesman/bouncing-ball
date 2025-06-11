@@ -19,7 +19,7 @@ function setUpMatter() {
     label: "ball",
   });
 
-  const platform = Bodies.rectangle(400, 400, 3000000, 20, {
+  const platform = Bodies.rectangle(800, 00, 2000, 200, {
     isStatic: true,
     label: "platform",
   });

@@ -47,7 +47,6 @@ let mouse = Mouse.create(render.canvas),
   mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     constraint: {
-      stiffness: 0.8,
       render: {
         visible: true,
       },
