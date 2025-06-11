@@ -40,12 +40,27 @@ const ball = Bodies.circle(200, 200, 20, {
   render: { fillStyle: "blue" },
 });
 
-const platform = Bodies.rectangle(canvas.width / 2, canvas.height, canvas.width - 20, 100, {
+const bottom = Bodies.rectangle(canvas.width / 2, canvas.height + 100, canvas.width + 100, 200, {
   isStatic: true,
   render: { fillStyle: "white" },
 });
 
-Composite.add(engine.world, [ball, platform]);
+const ceiling = Bodies.rectangle(canvas.width / 2, canvas.height - canvas.height - 100, canvas.width + 100, 200, {
+  isStatic: true,
+  render: { fillStyle: "white" },
+});
+
+const left = Bodies.rectangle(-100, canvas.height / 2, 200, canvas.height, {
+  isStatic: true,
+  render: { fillStyle: "white" },
+});
+
+const right = Bodies.rectangle(canvas.width + 100, canvas.height / 2, 200, canvas.height, {
+  isStatic: true,
+  render: { fillStyle: "white" },
+});
+
+Composite.add(engine.world, [ball, bottom, ceiling, left, right]);
 
 let bodiesUnderMouse;
 Events.on(mouseConstraint, "mousemove", () => {
