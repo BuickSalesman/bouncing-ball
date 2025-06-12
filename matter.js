@@ -38,27 +38,32 @@ Composite.add(engine.world, mouseConstraint);
 
 //add to same collision category as windows
 const ball = Bodies.circle(200, 200, 20, {
+  id: -1,
   render: { fillStyle: "blue" },
 });
 
 //windows do not collide with walls but balls collide with walls
 const bottom = Bodies.rectangle(canvas.width / 2, canvas.height + 100, canvas.width + 100, 200, {
   isStatic: true,
+  id: -2,
   render: { fillStyle: "white" },
 });
 
 const ceiling = Bodies.rectangle(canvas.width / 2, canvas.height - canvas.height - 100, canvas.width + 100, 200, {
   isStatic: true,
+  id: -3,
   render: { fillStyle: "white" },
 });
 
 const left = Bodies.rectangle(-100, canvas.height / 2, 200, canvas.height, {
   isStatic: true,
+  id: -4,
   render: { fillStyle: "white" },
 });
 
 const right = Bodies.rectangle(canvas.width + 100, canvas.height / 2, 200, canvas.height, {
   isStatic: true,
+  id: -5,
   render: { fillStyle: "white" },
 });
 
@@ -78,12 +83,15 @@ Events.on(mouseConstraint, "mousemove", () => {
   }
 });
 
-//for each window create a window of the same size behind/on top of that window
-//window same collision group as ball but
+let bodiesInWorld = new Set();
 
-function updateWindows(windows) {
-  windows.forEach((window) => {});
+for (const body of Composite.allBodies(engine.world)) {
+  bodiesInWorld.add(body.id);
 }
+
+ipcRenderer.on("window-resize", (_, { id, bounds }) => {});
+
+ipcRenderer.on("window-drag", (_, { id, bounds }) => {});
 
 Events.on(engine, "afterUpdate", updateWindows);
 //listen for updated bounds

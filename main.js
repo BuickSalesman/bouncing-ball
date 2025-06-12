@@ -45,14 +45,34 @@ app.whenReady().then(() => {
 });
 
 // on app run but should also run on addwindow or resize
-let windows = windowManager
-  .getWindows()
-  .filter((w) => w.path.includes("/Applications/") && !w.path.includes("CoreServices") && w.isVisible());
-console.log(windows);
+let latestBounds = new Map();
 
-windows.forEach((win) => {
-  console.log(win.id, win.getBounds());
-});
+setInterval(() => {
+  windowManager
+    .getWindows()
+    .filter((w) => w.path.includes("/Applications/") && !w.path.includes("CoreServices") && w.isVisible())
+    .forEach((w) => {
+      const { x, y, width, height } = w.getBounds();
+      const prev = latestBounds.get(w.id);
+
+      if (!prev) {
+        latestBounds.set(w.id, { x: -1, y: -1, width: -1, height: -1 });
+        return;
+      }
+
+      if (prev.width !== width || prev.height !== height) {
+        win.webContents.send("window-resize", { id: w.id, x, y, width, height });
+      }
+      if (prev.x !== x || prev.y !== y) {
+        win.webContents.send("window-drag", { id: w.id, x, y });
+      }
+
+      if (prev.x !== x || prev.y !== y || prev.width !== width || prev.height !== height) {
+        latestBounds.set(w.id, { x, y, width, height });
+      }
+    });
+}, 1000);
+//run at 16 or 33
 
 //filter out windows to only visible non fullscreen with a margin between end of screen on one side at least a little larger the size of our ball
 
