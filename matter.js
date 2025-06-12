@@ -36,10 +36,12 @@ let mouse = Mouse.create(render.canvas),
 
 Composite.add(engine.world, mouseConstraint);
 
+//add to same collision category as windows
 const ball = Bodies.circle(200, 200, 20, {
   render: { fillStyle: "blue" },
 });
 
+//windows do not collide with walls but balls collide with walls
 const bottom = Bodies.rectangle(canvas.width / 2, canvas.height + 100, canvas.width + 100, 200, {
   isStatic: true,
   render: { fillStyle: "white" },
@@ -65,7 +67,7 @@ Composite.add(engine.world, [ball, bottom, ceiling, left, right]);
 let bodiesUnderMouse;
 Events.on(mouseConstraint, "mousemove", () => {
   let { x, y } = mouse.position;
-  const bodiesUnderMouse = Query.point(Composite.allBodies(engine.world), { x, y });
+  bodiesUnderMouse = Query.point(Composite.allBodies(engine.world), { x, y });
 
   if (bodiesUnderMouse.length > 0) {
     ipcRenderer.send("body-under");
@@ -75,3 +77,18 @@ Events.on(mouseConstraint, "mousemove", () => {
     ipcRenderer.send("no-bodies-found");
   }
 });
+
+//for each window create a window of the same size behind/on top of that window
+//window same collision group as ball but
+
+function updateWindows(windows) {
+  windows.forEach((window) => {});
+}
+
+Events.on(engine, "afterUpdate", updateWindows);
+//listen for updated bounds
+//listen for updates size
+//listen for update fullscreen
+//listen for added window
+//listen for removed window
+//listen for not enough ball space

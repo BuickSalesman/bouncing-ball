@@ -44,8 +44,23 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-let windows = windowManager.getWindows();
+// on app run but should also run on addwindow or resize
+let windows = windowManager
+  .getWindows()
+  .filter((w) => w.path.includes("/Applications/") && !w.path.includes("CoreServices") && w.isVisible());
 console.log(windows);
+
+windows.forEach((win) => {
+  console.log(win.id, win.getBounds());
+});
+
+//filter out windows to only visible non fullscreen with a margin between end of screen on one side at least a little larger the size of our ball
+
+//get bounds of all windows
+
+//for each window create a matter body in matter.js on canvas
+
+//broadcast changes in windowsize to matter.js
 /* 
   
   
