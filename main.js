@@ -2,8 +2,10 @@
 /// <reference types="electron" />
 /// <reference types="node" />
 /// <reference types="matter-js" />
+/// <reference types="node-window-manager" />
 
 const { BrowserWindow, app, screen, ipcMain } = require("electron");
+const { windowManager } = require("node-window-manager");
 
 let win;
 
@@ -26,7 +28,7 @@ const createWindow = () => {
     },
   });
   win.loadFile("index.html");
-  win.webContents.openDevTools({ mode: "detach" });
+  // win.webContents.openDevTools({ mode: "detach" });
   win.setIgnoreMouseEvents(true, { forward: true });
 };
 
@@ -42,6 +44,8 @@ app.whenReady().then(() => {
   createWindow();
 });
 
+let windows = windowManager.getWindows();
+console.log(windows);
 /* 
   
   
