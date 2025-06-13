@@ -83,20 +83,36 @@ Events.on(mouseConstraint, "mousemove", () => {
   }
 });
 
+// this does nothing but makes sure that the wall bounds and ball are all showing up
 let bodiesInWorld = new Set();
-
 for (const body of Composite.allBodies(engine.world)) {
-  bodiesInWorld.add(body.id);
+  bodiesInWorld.add(body);
 }
 
-ipcRenderer.on("window-resize", (_, { id, bounds }) => {});
-
-ipcRenderer.on("window-drag", (_, { id, bounds }) => {});
-
-Events.on(engine, "afterUpdate", updateWindows);
+//listen for added window ✅
+//listen for removed window
 //listen for updated bounds
 //listen for updates size
-//listen for update fullscreen
-//listen for added window
-//listen for removed window
 //listen for not enough ball space
+//listen for update fullscreen but that might be the same as ball space
+
+let windowBodies = new Map();
+
+function updateWindows(id, bounds) {
+  if (windowBodies.has(id)) {
+    console.log("stuff");
+  } else {
+    // listen for added window
+    windowBodies.set(id, { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height });
+  }
+}
+
+ipcRenderer.on("window-resize", (_, { id, bounds }) => {
+  updateWindows(id, bounds);
+});
+
+ipcRenderer.on("window-drag", (_, { id, bounds }) => {
+  updateWindows(id, bounds);
+});
+
+Events.on(engine, "afterUpdate", updateWindows);

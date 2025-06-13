@@ -40,6 +40,12 @@ ipcMain.on("no-bodies-found", (_evt) => {
   win.setIgnoreMouseEvents(true, { forward: true });
 });
 
+// ipcMain.on("bodies-in-set", (_evt, bodies) => {
+//   for (const body of bodies) {
+//     console.log(body);
+//   }
+// });
+
 app.whenReady().then(() => {
   createWindow();
 });
@@ -60,6 +66,8 @@ setInterval(() => {
         return;
       }
 
+      //window-resize covers addition of and removal of window objects active sent to matter.js
+
       if (prev.width !== width || prev.height !== height) {
         win.webContents.send("window-resize", { id: w.id, x, y, width, height });
       }
@@ -71,7 +79,7 @@ setInterval(() => {
         latestBounds.set(w.id, { x, y, width, height });
       }
     });
-}, 1000);
+}, 16);
 //run at 16 or 33
 
 //filter out windows to only visible non fullscreen with a margin between end of screen on one side at least a little larger the size of our ball
