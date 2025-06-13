@@ -98,20 +98,30 @@ for (const body of Composite.allBodies(engine.world)) {
 
 let windowBodies = new Map();
 
-//STACK!!!!!
+//Q!!!!!
 let activeWindows = [];
 
 function updateWindows(id, bounds) {
-  activeWindows.push(id);
-
-  if (windowBodies.has(id)) {
+  if (id === activeWindows[0]) {
+    //check bounds and update map
+    let toBack = activeWindows.shift();
+    activeWindows.push(toBack);
   } else {
-    // listen for added window
-    windowBodies.set(id, { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height });
+    if (activeWindows[id] === activeWindows[1]) {
+      activeWindows.shift();
+      let toBack = activeWindows.shift();
+      activeWindows.push(toBack);
+    } else {
+      activeWindows.push(id);
+      windowBodies.set(id, { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height });
+      let newWindow = Bodies.rectangle(id.x, id.y, id.width, id.height, {
+        isStatic: true,
+        id: id,
+        render: { fillStyle: "red" },
+      });
+      Composite.add(engine.world, newWindow);
+    }
   }
-
-  //after body creation and all that
-  const deletedWindow = activeWindows.pop();
 }
 
 ipcRenderer.on("window-resize", (_, { id, bounds }) => {

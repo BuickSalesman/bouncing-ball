@@ -60,6 +60,7 @@ setInterval(() => {
     .sort((a, b) => a.id - b.id)
     .forEach((w) => {
       const { x, y, width, height } = w.getBounds();
+      console.log(x, y, width, height);
       const prev = latestBounds.get(w.id);
 
       if (!prev) {
@@ -71,16 +72,20 @@ setInterval(() => {
 
       if (prev.width !== width || prev.height !== height) {
         win.webContents.send("window-resize", { id: w.id, x, y, width, height });
+        console.log("window-resize");
       }
+
       if (prev.x !== x || prev.y !== y) {
         win.webContents.send("window-drag", { id: w.id, x, y });
+        console.log("window dragged");
       }
 
       if (prev.x !== x || prev.y !== y || prev.width !== width || prev.height !== height) {
         latestBounds.set(w.id, { x, y, width, height });
+        console.log("reset prev bounds!");
       }
     });
-}, 16);
+}, 2000);
 //run at 16 or 33
 
 //filter out windows to only visible non fullscreen with a margin between end of screen on one side at least a little larger the size of our ball
