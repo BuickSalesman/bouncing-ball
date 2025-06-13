@@ -98,16 +98,24 @@ for (const body of Composite.allBodies(engine.world)) {
 
 let windowBodies = new Map();
 
+//STACK!!!!!
+let activeWindows = [];
+
 function updateWindows(id, bounds) {
+  activeWindows.push(id);
+
   if (windowBodies.has(id)) {
-    console.log("stuff");
   } else {
     // listen for added window
     windowBodies.set(id, { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height });
   }
+
+  //after body creation and all that
+  const deletedWindow = activeWindows.pop();
 }
 
 ipcRenderer.on("window-resize", (_, { id, bounds }) => {
+  // we can listen for fullscreen, add, remove
   updateWindows(id, bounds);
 });
 

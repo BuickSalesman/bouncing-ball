@@ -32,11 +32,11 @@ const createWindow = () => {
   win.setIgnoreMouseEvents(true, { forward: true });
 };
 
-ipcMain.on("body-under", (_evt) => {
+ipcMain.on("body-under", (_) => {
   win.setIgnoreMouseEvents(false), console.log("body under");
 });
 
-ipcMain.on("no-bodies-found", (_evt) => {
+ipcMain.on("no-bodies-found", (_) => {
   win.setIgnoreMouseEvents(true, { forward: true });
 });
 
@@ -57,6 +57,7 @@ setInterval(() => {
   windowManager
     .getWindows()
     .filter((w) => w.path.includes("/Applications/") && !w.path.includes("CoreServices") && w.isVisible())
+    .sort((a, b) => a.id - b.id)
     .forEach((w) => {
       const { x, y, width, height } = w.getBounds();
       const prev = latestBounds.get(w.id);
