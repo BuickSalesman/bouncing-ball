@@ -71,12 +71,12 @@ setInterval(() => {
       //window-resize covers addition of and removal of window objects active sent to matter.js
 
       if (prev.width !== width || prev.height !== height) {
-        win.webContents.send("window-resize", { id: w.id, x, y, width, height });
+        win.webContents.send("window-resize", { id: w.id, bounds: { x, y, width, height } });
         console.log("window-resize");
       }
 
       if (prev.x !== x || prev.y !== y) {
-        win.webContents.send("window-drag", { id: w.id, x, y });
+        win.webContents.send("window-drag", { id: w.id, bounds: { x, y } });
         console.log("window dragged");
       }
 
