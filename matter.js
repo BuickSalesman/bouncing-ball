@@ -44,6 +44,13 @@ const ball = Bodies.circle(200, 200, 20, {
   render: { fillStyle: "blue" },
 });
 
+const ball2 = Bodies.circle(250, 250, 20, {
+  id: -6,
+  restitution: 0.8,
+  friction: 0.2,
+  render: { fillStyle: "red" },
+});
+
 //windows do not collide with walls but balls collide with walls
 const bottom = Bodies.rectangle(canvas.width / 2, canvas.height + 100, canvas.width + 100, 200, {
   isStatic: true,
@@ -73,7 +80,7 @@ const right = Bodies.rectangle(canvas.width + 100, canvas.height / 2, 200, canva
   render: { fillStyle: "white" },
 });
 
-Composite.add(engine.world, [ball, bottom, ceiling, left, right]);
+Composite.add(engine.world, [ball, ball2, bottom, ceiling, left, right]);
 
 let bodiesUnderMouse;
 Events.on(mouseConstraint, "mousemove", () => {
