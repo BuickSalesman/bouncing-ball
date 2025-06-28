@@ -14,7 +14,7 @@
     "@types/electron": "^1.4.38",
     "@types/matter-js": "^0.19.8",
     "@types/node": "^22.15.31",
-    "electron": "^36.4.0",
+    "electron": "^36.6.0",
     "node-window-manager": "^2.2.4",
     "typescript": "^5.8.3"
   },
