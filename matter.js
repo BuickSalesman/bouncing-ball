@@ -4,8 +4,9 @@
 
 const { ipcRenderer } = require("electron");
 const { Engine, Render, Runner, Mouse, MouseConstraint, Composite, Bodies, Events, Query } = require("matter-js");
+import { createBoundariesAndBall } from "./matter-helpers/boundariesAndBall.js"
 
-const canvas = document.querySelector("canvas");
+export const canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const engine = Engine.create();
@@ -36,44 +37,9 @@ let mouse = Mouse.create(render.canvas),
 
 Composite.add(engine.world, mouseConstraint);
 
-//add to same collision category as windows
-const ball = Bodies.circle(200, 200, 20, {
-    id: -1,
-    restitution: 0.8,
-    friction: 0.2,
-    render: { fillStyle: "blue" },
-});
+const boundariesAndBall = createBoundariesAndBall(canvas.width, canvas.height);
 
-//windows do not collide with walls but balls collide with walls
-const bottom = Bodies.rectangle(canvas.width / 2, canvas.height + 100, canvas.width + 100, 200, {
-    isStatic: true,
-    id: -2,
-    friction: 0.2,
-    render: { fillStyle: "white" },
-});
-
-const ceiling = Bodies.rectangle(canvas.width / 2, canvas.height - canvas.height - 100, canvas.width + 100, 200, {
-    isStatic: true,
-    id: -3,
-    friction: 0.2,
-    render: { fillStyle: "white" },
-});
-
-const left = Bodies.rectangle(-100, canvas.height / 2, 200, canvas.height, {
-    isStatic: true,
-    id: -4,
-    friction: 0.2,
-    render: { fillStyle: "white" },
-});
-
-const right = Bodies.rectangle(canvas.width + 100, canvas.height / 2, 200, canvas.height, {
-    isStatic: true,
-    id: -5,
-    friction: 0.2,
-    render: { fillStyle: "white" },
-});
-
-Composite.add(engine.world, [ball, bottom, ceiling, left, right]);
+Composite.add(engine.world, boundariesAndBall);
 
 let bodiesUnderMouse;
 Events.on(mouseConstraint, "mousemove", () => {
