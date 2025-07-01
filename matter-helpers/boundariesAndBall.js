@@ -1,6 +1,6 @@
-import { Bodies } from "matter-js";
+const { Bodies } = require("matter-js")
 
-export function createBoundariesAndBall(canvasWidth, canvasHeight) {
+function createBoundariesAndBall(canvasWidth, canvasHeight) {
 
     const ball = Bodies.circle(200, 200, 20, {
         id: -1,
@@ -40,3 +40,5 @@ export function createBoundariesAndBall(canvasWidth, canvasHeight) {
 
     return [ball, bottom, ceiling, left, right]
 }
+
+module.exports = { createBoundariesAndBall }

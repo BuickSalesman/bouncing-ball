@@ -4,9 +4,9 @@
 
 const { ipcRenderer } = require("electron");
 const { Engine, Render, Runner, Mouse, MouseConstraint, Composite, Bodies, Events, Query } = require("matter-js");
-import { createBoundariesAndBall } from "./matter-helpers/boundariesAndBall.js"
+const { createBoundariesAndBall } = require("./matter-helpers/boundariesAndBall.js")
 
-export const canvas = document.querySelector("canvas");
+const canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const engine = Engine.create();
@@ -38,6 +38,7 @@ let mouse = Mouse.create(render.canvas),
 Composite.add(engine.world, mouseConstraint);
 
 const boundariesAndBall = createBoundariesAndBall(canvas.width, canvas.height);
+console.log(boundariesAndBall)
 
 Composite.add(engine.world, boundariesAndBall);
 
@@ -113,3 +114,5 @@ ipcRenderer.on("window-drag", (_, { id, bounds }) => {
 });
 
 Events.on(engine, "afterUpdate", updateWindows);
+
+module.exports = { canvas }
