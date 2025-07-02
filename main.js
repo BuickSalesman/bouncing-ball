@@ -5,8 +5,7 @@
 /// <reference types="node-window-manager" />
 
 const { BrowserWindow, app, screen, ipcMain } = require("electron");
-const { windowManager } = require("node-window-manager");
-const { getInitWindows } = require("./main-helpers/getInitWindows.js")
+const { trackWindows } = require("./main-helpers/trackWindows.js")
 
 let win;
 
@@ -56,10 +55,8 @@ app.whenReady().then(() => {
 
 
 
+setInterval(trackWindows, 100)
 
-
-let initWindows = getInitWindows()
-console.log(initWindows)
 
 
 
