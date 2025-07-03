@@ -3,21 +3,7 @@ const { windowCreatedOrDestroyed } = require("./windowCreatedOrDestroyed.js")
 const { windowAABBChange } = require("./windowAABBChange.js")
 
 
-const boundsMap = new Map()
-// look into idle polling here
-function hasWindowMoved(win) {
-    const current = win.getBounds()
-    const previous = boundsMap.get(win.id)
 
-    const moved = !previous ||
-        current.x !== previous.x ||
-        current.y !== previous.y ||
-        current.width !== previous.width ||
-        current.height !== previous.height
-
-    boundsMap.set(win.id, current)
-    return moved
-}
 let prevWindows = new Map()
 
 function trackWindows() {
@@ -28,17 +14,9 @@ function trackWindows() {
         const path = win.path
         const winProps = { x, y, width, height, path }
         currWindows.set(win.id, winProps)
-        // send new windows
-        // send closed window
-        // send moved window
-        // send resized with check for too big or now small enough
-        // send too big window
-        // 
-
-
     }
-    //windowCreatedOrDestroyed(win, currWindows, prevWindows)
-    //windowAABBChange(win, currWindows, prevWindows)
+    windowCreatedOrDestroyed(currWindows, prevWindows)
+    windowAABBChange(currWindows, prevWindows)
 
     prevWindows = currWindows
 }
