@@ -42,20 +42,13 @@ ipcMain.on("no-bodies-found", (_) => {
     win.setIgnoreMouseEvents(true, { forward: true });
 });
 
-// ipcMain.on("bodies-in-set", (_evt, bodies) => {
-//   for (const body of bodies) {
-//     console.log(body);
-//   }
-// });
-
-
 app.whenReady().then(() => {
     createWindow();
 });
 
 
-
-setInterval(trackWindows, 100)
+// look into idle polling here
+setInterval(trackWindows, 1000)
 
 
 

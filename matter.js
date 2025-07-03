@@ -6,12 +6,14 @@ const { Engine, Render, Runner, Composite, Bodies, Events, Query } = require("ma
 const { createBoundariesAndBall } = require("./matter-helpers/boundariesAndBall.js")
 const { createMouseAndConstraint } = require("./matter-helpers/mouseAndConstraint.js")
 const { ballDetector } = require("./matter-helpers/ballDetector.js")
+const { windowUpdate } = require("./matter-helpers/windowUpdate.js")
 
 const canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const engine = Engine.create();
+const world = engine.world
 
 const render = Render.create({
     canvas,
@@ -29,12 +31,15 @@ const runner = Runner.create();
 Runner.run(runner, engine);
 
 const { mouse, mouseConstraint } = createMouseAndConstraint(render, engine)
-Composite.add(engine.world, mouseConstraint);
+Composite.add(world, mouseConstraint);
 
 const boundariesAndBall = createBoundariesAndBall(canvas.width, canvas.height);
-Composite.add(engine.world, boundariesAndBall);
+Composite.add(world, boundariesAndBall);
 
+// send signal to main process to stop passthrough when hovering over ball
 ballDetector(engine, mouse, mouseConstraint, ipcRenderer)
+
+windowUpdate(world, ipcRenderer) //events.on(afterupdate)
 
 
 //listen for added window ✅
