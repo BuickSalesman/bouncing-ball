@@ -1,3 +1,4 @@
+const { webContents } = require("electron");
 const { windowManager } = require("node-window-manager");
 
 const boundsMap = new Map()
@@ -21,6 +22,7 @@ function trackWindows() {
     for (const win of windows) {
         if (hasWindowMoved(win)) {
             console.log("sending window to matter.js", win, win.getBounds().x, win.getBounds().y, win.getBounds().width, win.getBounds().height)
+
         }
     }
 }
