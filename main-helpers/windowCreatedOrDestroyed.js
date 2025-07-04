@@ -9,7 +9,10 @@ function windowCreatedOrDestroyed(overlay, currWindows, prevWindows) {
 
     for (const id of created) {
         const winProps = currWindows.get(id)
-        console.log("sending window-created to Matter!")
+        console.log("sending window-created to Matter!", winProps)
+        if (winProps.path) {
+            console.log(winProps.path)
+        }
         overlay.webContents.send("window-created", winProps)
     }
 

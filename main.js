@@ -30,7 +30,7 @@ const createWindow = () => {
         },
     });
     overlay.loadFile("index.html");
-    overlay.webContents.openDevTools({ mode: "detach" });
+    //overlay.webContents.openDevTools({ mode: "detach" });
     overlay.setIgnoreMouseEvents(true, { forward: true });
 };
 
@@ -44,7 +44,7 @@ ipcMain.on("no-bodies-found", (_) => {
 
 app.whenReady().then(() => {
     createWindow();
-    setInterval(() => trackWindows(overlay), 1000)
+    setInterval(() => trackWindows(overlay), 30)
 });
 
 // look into idle polling here
