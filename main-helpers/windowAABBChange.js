@@ -1,6 +1,7 @@
+const { windowCreatedOrDestroyed } = require("./windowCreatedOrDestroyed.js");
 
 
-function windowAABBChange(currWindows, prevWindows) {
+function windowAABBChange(overlay, currWindows, prevWindows) {
 
     const moved = (curr, prev) =>
         !prev ||
@@ -13,7 +14,12 @@ function windowAABBChange(currWindows, prevWindows) {
     for (const [currId, currProps] of currWindows) {
         const prevProps = prevWindows.get(currId)
         if (moved(currProps, prevProps)) {
-            console.log(currProps.path, " new bounds: ", currProps)
+            if (!prevProps) {
+                windowCreatedOrDestroyed(currWindows, prevWindows)
+            } else {
+                console.log(currProps.path, " new bounds: ", currProps)
+                overlay.webContents.send("window-update", currProps)
+            }
         }
     }
 

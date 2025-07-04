@@ -7,13 +7,13 @@
 const { BrowserWindow, app, screen, ipcMain } = require("electron");
 const { trackWindows } = require("./main-helpers/trackWindows.js")
 
-let win;
+let overlay;
 
 const createWindow = () => {
     // getPrimaryDisplay only grabs the main mabook display if attached to other monitors, and if multtple desktop spaces, only grabs the one that the function is running in.
 
     const { x, y, width, height } = screen.getPrimaryDisplay().bounds;
-    win = new BrowserWindow({
+    overlay = new BrowserWindow({
         x,
         y,
         width,
@@ -29,26 +29,25 @@ const createWindow = () => {
             contextIsolation: false,
         },
     });
-    win.loadFile("index.html");
-    // win.webContents.openDevTools({ mode: "detach" });
-    win.setIgnoreMouseEvents(true, { forward: true });
+    overlay.loadFile("index.html");
+    overlay.webContents.openDevTools({ mode: "detach" });
+    overlay.setIgnoreMouseEvents(true, { forward: true });
 };
 
 ipcMain.on("body-under", (_) => {
-    win.setIgnoreMouseEvents(false), console.log("body under");
+    overlay.setIgnoreMouseEvents(false), console.log("body under");
 });
 
 ipcMain.on("no-bodies-found", (_) => {
-    win.setIgnoreMouseEvents(true, { forward: true });
+    overlay.setIgnoreMouseEvents(true, { forward: true });
 });
 
 app.whenReady().then(() => {
     createWindow();
+    setInterval(() => trackWindows(overlay), 1000)
 });
 
-
 // look into idle polling here
-setInterval(trackWindows, 1000)
 
 
 
@@ -84,3 +83,4 @@ app.on("window-all-closed", () => {
         app.quit();
     }
 });
+
