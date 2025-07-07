@@ -1,6 +1,5 @@
 const { Body, Bodies, Composite } = require("matter-js")
 
-
 function windowUpdate(world, icpRenderer) {
 
     //

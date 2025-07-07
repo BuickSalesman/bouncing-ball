@@ -17,9 +17,10 @@ function windowAABBChange(overlay, currWindows, prevWindows) {
             if (!prevProps) {
                 windowCreatedOrDestroyed(currWindows, prevWindows)
 
-                //
-                //
-                //need an else if here to destroy window when it is too big for the targest ball
+                /*
+                need an else if here to destroy window when it is too big for the
+                targest ball 
+                */
 
             } else {
                 console.log(currProps.path, "new bounds: ", currProps)

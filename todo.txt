@@ -7,6 +7,15 @@
     ~ change size
 
 
-- will have to look at zindex of windows to track when one is on top of others and when one isnt so balls dont bounce off of windows behind other windows
+- will have to look at zindex of windows to track when one is on top of others and when
+  one isnt so balls dont bounce off of windows behind other windows
 
-- MAKE WINDOWS THEMSELVES BOUNY BALLS AND OBJECTS HAVE WINDOW COORDS REFLECT MATTER COORDS OH MY GOD THIS IS SO GOOD
+- MAKE WINDOWS THEMSELVES BOUNY BALLS AND OBJECTS HAVE WINDOW COORDS REFLECT MATTER COORDS
+                            __OH MY GOD THIS IS SO GOOD__
+  -- this is now gravity mode, where you hit a button and all the windows become objects
+     subject to gravity
+
+  -- add a skhd/yabai shortcut to be able to toggle "grabbing" windows, 
+     i.e. <C-g> + clicking a window just lets you pick it up by toggling click-through 
+     of the main electron overlay as off, whereas normally click through is on
+

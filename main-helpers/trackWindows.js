@@ -3,7 +3,7 @@ const { windowCreatedOrDestroyed } = require("./windowCreatedOrDestroyed.js")
 const { windowAABBChange } = require("./windowAABBChange.js")
 
 const exclude = [
-    //this needs to be reworked to include finger though, which is a part of core
+    //this needs to be reworked to include finder, which is a part of core
     "electron",
     "Core",
     "core",
