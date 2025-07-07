@@ -7,7 +7,8 @@ const exclude = [
     "electron",
     "Core",
     "core",
-    "DisplayLink"
+    "DisplayLink",
+    "Slack"
 ]
 
 let prevWindows = new Map()
