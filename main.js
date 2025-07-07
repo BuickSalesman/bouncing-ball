@@ -44,6 +44,7 @@ ipcMain.on("no-bodies-found", (_) => {
 
 app.whenReady().then(() => {
     createWindow();
+    //stop tracking when leaving desktop space
     setInterval(() => trackWindows(overlay), 30)
 });
 

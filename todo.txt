@@ -1,0 +1,12 @@
+- control panel modal
+    ~ add sides to ball 3-30
+    ~ change bounciness
+    ~ change deadliness? (destroy windows if hit)?
+    ~ color or skins?
+    ~ destroy or create multiple balls
+    ~ change size
+
+
+- will have to look at zindex of windows to track when one is on top of others and when one isnt so balls dont bounce off of windows behind other windows
+
+- MAKE WINDOWS THEMSELVES BOUNY BALLS AND OBJECTS HAVE WINDOW COORDS REFLECT MATTER COORDS OH MY GOD THIS IS SO GOOD

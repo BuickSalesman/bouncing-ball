@@ -1,5 +1,3 @@
-
-
 function windowCreatedOrDestroyed(overlay, currWindows, prevWindows) {
     let curr = new Set(currWindows.keys())
     let prev = new Set(prevWindows?.keys() ?? [])
